@@ -73,9 +73,12 @@ func Example_dFT1D() {
 	copy(dft.In, data)
 
 	dft.Execute()
+
+	fmt.Println(dft)
 	fmt.Printf("%+0.3f\n", dft.In)
 	fmt.Printf("%+0.3f\n", dft.Out)
 	// Output:
+	// {Kind:C2C Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[8]complex128}
 	// [(+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i)]
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
 }
@@ -108,9 +111,12 @@ func Example_dFTR2C() {
 	copy(r2c.In, data)
 
 	r2c.Execute()
+
+	fmt.Println(r2c)
 	fmt.Printf("%+0.3f\n", r2c.In)
 	fmt.Printf("%+0.3f\n", r2c.Out)
 	// Output:
+	// {Kind:R2C Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[5]float64}
 	// [+1.000 +1.000 +1.000 +1.000 +0.000 +0.000 +0.000 +0.000]
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
 }
@@ -148,9 +154,11 @@ func Example_dFTC2R() {
 	copy(c2r.In, data)
 
 	c2r.Execute()
+	fmt.Println(c2r)
 	fmt.Printf("%+0.3f\n", c2r.In)
 	fmt.Printf("%+0.3f\n", c2r.Out)
 	// Output:
+	// {Kind:C2R Locality:OutOfPlace PlanFlags:NA In:[5]complex128 Out:[8]float64}
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
 	// [+8.000 +8.000 +8.000 +8.000 +0.000 +0.000 +0.000 +0.000]
 }
