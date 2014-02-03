@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Planning flags provided by FFTW.
 type PlanFlag uint
 
 const (
@@ -49,6 +50,7 @@ func (p PlanFlag) String() (s string) {
 	return strings.Join(flags, "|")
 }
 
+// Specifies direction of transform, only used for full-complex DFT.
 type Direction int
 
 const (
@@ -67,6 +69,7 @@ func (d Direction) String() string {
 	}
 }
 
+// Specifies locality of data for transform.
 type Locality int
 
 const (
