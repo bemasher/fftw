@@ -77,7 +77,7 @@ type DFTR2CPlan struct {
 
 // Plans 1D Real-to-Complex DFT of size n. For in-place transforms input and
 // output arrays are backed by the same array using reflection. This is
-// inherently unsafe as it requires casting an array of one type to another
+// inherently unsafe because it requires casting an array of one type to another
 // which is not allowed in the type system.
 func NewDFTR2C(n uint, locality Locality, planFlags PlanFlag) (plan DFTR2CPlan) {
 	plan.Locality = locality
@@ -128,7 +128,7 @@ type DFTC2RPlan struct {
 
 // Plans 1D Complex-to-Real DFT of size n. For in-place transforms input and
 // output arrays are backed by the same array using reflection. This is
-// inherently unsafe as it requires casting an array of one type to another
+// inherently unsafe because it requires casting an array of one type to another
 // which is not allowed in the type system.
 func NewDFTC2R(n uint, locality Locality, planFlags PlanFlag) (plan DFTC2RPlan) {
 	plan.Locality = locality
