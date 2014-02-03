@@ -1,5 +1,38 @@
+## FFTW
+This package is a wrapper for 1D full and half complex DFT's provided by the FFTW library.
+
+## Example
+```Go
+package main
+
+import (
+	"fmt"
+	"github.com/bemasher/fftw"
+)
+
+func main() {
+	dft := fftw.NewDFT1D(8, fftw.Forward, fftw.OutOfPlace, fftw.Measure)
+
+	// Modifying the location of the input or output arrays will cause FFTW to
+	// fail. Instead, copy data into and out of arrays.
+	copy(dft.In, []complex128{1, 1, 1, 1, 0, 0, 0, 0})
+
+	dft.Execute()
+
+	fmt.Println(dft)
+	fmt.Printf("%+0.3f\n", dft.In)
+	fmt.Printf("%+0.3f\n", dft.Out)
+}
+```
+Output:
+```
+{Kind:C2C Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[8]complex128}
+[(+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i)]
+[(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
+```
+
 ## Windows
-On Windows generating the library file `libfftw3-3.a` is as follows:
+On Windows the library file `libfftw3-3.a` must be placed in the source directory of the package and can be generated using:
 	
 	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3-3.a
 
