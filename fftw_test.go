@@ -64,6 +64,22 @@ func TestDFT1D(t *testing.T) {
 	}
 }
 
+func Example_dFT1D() {
+	dft := NewDFT1D(8, Forward, OutOfPlace, Measure)
+
+	// Modifying the location of the input or output arrays will cause FFTW to
+	// fail. Instead, copy data into and out of arrays.
+	data := []complex128{1, 1, 1, 1, 0, 0, 0, 0}
+	copy(dft.In, data)
+
+	dft.Execute()
+	fmt.Printf("%+0.3f\n", dft.In)
+	fmt.Printf("%+0.3f\n", dft.Out)
+	// Output:
+	// [(+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i)]
+	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
+}
+
 func TestR2CDFT(t *testing.T) {
 	for _, locality := range Localities {
 		// Plan transform for current locality
@@ -81,6 +97,22 @@ func TestR2CDFT(t *testing.T) {
 			}
 		}
 	}
+}
+
+func Example_dFTR2C() {
+	r2c := NewDFTR2C(8, OutOfPlace, Measure)
+
+	// Modifying the location of the input or output arrays will cause FFTW to
+	// fail. Instead, copy data into and out of arrays.
+	data := []float64{1, 1, 1, 1, 0, 0, 0, 0}
+	copy(r2c.In, data)
+
+	r2c.Execute()
+	fmt.Printf("%+0.3f\n", r2c.In)
+	fmt.Printf("%+0.3f\n", r2c.Out)
+	// Output:
+	// [+1.000 +1.000 +1.000 +1.000 +0.000 +0.000 +0.000 +0.000]
+	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
 }
 
 func TestC2RDFT(t *testing.T) {
@@ -107,18 +139,20 @@ func TestC2RDFT(t *testing.T) {
 	}
 }
 
-func Example_dFT1D() {
-	dft := NewDFT1D(8, Forward, OutOfPlace, Measure)
+func Example_dFTC2R() {
+	c2r := NewDFTC2R(8, OutOfPlace, Measure)
 
-	for i := 0; i < 4; i++ {
-		dft.In[i] = 1
-	}
+	// Modifying the location of the input or output arrays will cause FFTW to
+	// fail. Instead, copy data into and out of arrays.
+	data := []complex128{(4 + 0i), (1 - 2.414213562373095i), (0 + 0i), (1 - 0.41421356237309515i), (0 + 0i)}
+	copy(c2r.In, data)
 
-	dft.Execute()
-	fmt.Printf("%+0.3f\n", dft.In)
-	fmt.Printf("%+0.3f\n", dft.Out)
-	// [(+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i)]
-	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
+	c2r.Execute()
+	fmt.Printf("%+0.3f\n", c2r.In)
+	fmt.Printf("%+0.3f\n", c2r.Out)
+	// Output:
+	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
+	// [+8.000 +8.000 +8.000 +8.000 +0.000 +0.000 +0.000 +0.000]
 }
 
 func init() {
