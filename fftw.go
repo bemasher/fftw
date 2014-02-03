@@ -66,6 +66,10 @@ func NewDFT1D(n uint, dir Direction, locality Locality, planFlags PlanFlag) (pla
 	return
 }
 
+func (dft DFT1DPlan) String() string {
+	return fmt.Sprintf("{Kind:C2C Locality:%s PlanFlags:%s In:[%d]complex128 Out:[%d]complex128}", dft.Locality, dft.PlanFlags, len(dft.In), len(dft.Out))
+}
+
 // 1D Real-to-Complex DFT for transforming real data to complex data.
 type DFTR2CPlan struct {
 	plan
