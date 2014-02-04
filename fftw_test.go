@@ -87,8 +87,8 @@ func ExampleDFT1DPlan() {
 func TestHCDFT1D(t *testing.T) {
 	for _, locality := range Localities {
 		// Plan forward and backward transforms for current locality
-		dftForward := NewHCDFT1D(8, Forward, locality, Measure)
-		dftBackward := NewHCDFT1D(8, Backward, locality, Measure)
+		dftForward := NewHCDFT1D(8, nil, nil, Forward, locality, Measure)
+		dftBackward := NewHCDFT1D(8, nil, nil, Backward, locality, Measure)
 
 		// Copy test vector to input and execute
 		copy(dftForward.Real, TestInputVectorF64)
@@ -122,7 +122,7 @@ func TestHCDFT1D(t *testing.T) {
 }
 
 func ExampleHCDFT1DPlan() {
-	dft := NewHCDFT1D(8, Forward, OutOfPlace, Measure)
+	dft := NewHCDFT1D(8, nil, nil, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
@@ -194,7 +194,7 @@ func BenchmarkDFTOutOfPlaceBackward(b *testing.B) {
 }
 
 func BenchmarkHCDFTInPlaceForward(b *testing.B) {
-	dft := NewHCDFT1D(BlockSize, Forward, InPlace, Measure)
+	dft := NewHCDFT1D(BlockSize, nil, nil, Forward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -206,7 +206,7 @@ func BenchmarkHCDFTInPlaceForward(b *testing.B) {
 }
 
 func BenchmarkHCDFTOutOfPlaceForward(b *testing.B) {
-	dft := NewHCDFT1D(BlockSize, Forward, OutOfPlace, Measure)
+	dft := NewHCDFT1D(BlockSize, nil, nil, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -218,7 +218,7 @@ func BenchmarkHCDFTOutOfPlaceForward(b *testing.B) {
 }
 
 func BenchmarkHCDFTInPlaceBackward(b *testing.B) {
-	dft := NewHCDFT1D(BlockSize, Backward, InPlace, Measure)
+	dft := NewHCDFT1D(BlockSize, nil, nil, Backward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -230,7 +230,7 @@ func BenchmarkHCDFTInPlaceBackward(b *testing.B) {
 }
 
 func BenchmarkHCDFTOutOfPlaceBackward(b *testing.B) {
-	dft := NewHCDFT1D(BlockSize, Backward, OutOfPlace, Measure)
+	dft := NewHCDFT1D(BlockSize, nil, nil, Backward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)

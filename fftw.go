@@ -84,7 +84,7 @@ type HCDFT1DPlan struct {
 // output arrays are backed by the same array using reflection. This is
 // inherently unsafe because it requires casting an array of one type to another
 // which is not allowed in the type system.
-func NewHCDFT1D(n uint, dir Direction, locality Locality, planFlags PlanFlag) (plan HCDFT1DPlan) {
+func NewHCDFT1D(n uint, r []float64, c []complex128, dir Direction, locality Locality, planFlags PlanFlag) (plan HCDFT1DPlan) {
 	plan.Direction = dir
 	plan.Locality = locality
 	plan.PlanFlags = planFlags
@@ -107,6 +107,16 @@ func NewHCDFT1D(n uint, dir Direction, locality Locality, planFlags PlanFlag) (p
 		header.Data = uintptr(unsafe.Pointer(&plan.Real[0]))
 
 		plan.Complex = *(*[]complex128)(unsafe.Pointer(&header))
+	case PreAlloc:
+		if len(r) != int(n) {
+			panic(fmt.Sprintf("invalid real array length: n:%d r:%d", n, len(r)))
+		}
+		if len(c) != cmplxLen {
+			panic(fmt.Sprintf("invalid complex array length: n:%d r:%d", cmplxLen, len(c)))
+		}
+
+		plan.Real = r
+		plan.Complex = c
 	default:
 		panic(fmt.Sprintf("invalid locality: %d\n", locality))
 	}
