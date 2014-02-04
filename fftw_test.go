@@ -166,6 +166,83 @@ func Example_dFTC2R() {
 	// [+8.000 +8.000 +8.000 +8.000 +0.000 +0.000 +0.000 +0.000]
 }
 
+const (
+	Bits      = 14
+	BlockSize = 1 << Bits
+)
+
+func BenchmarkDFTInPlace(b *testing.B) {
+	dft := NewDFT1D(BlockSize, Forward, InPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkDFTOutOfPlace(b *testing.B) {
+	dft := NewDFT1D(BlockSize, Forward, OutOfPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkR2CInPlace(b *testing.B) {
+	dft := NewDFTR2C(BlockSize, InPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkR2COutOfPlace(b *testing.B) {
+	dft := NewDFTR2C(BlockSize, OutOfPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkC2RInPlace(b *testing.B) {
+	dft := NewDFTC2R(BlockSize, InPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkC2ROutOfPlace(b *testing.B) {
+	dft := NewDFTC2R(BlockSize, OutOfPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
 func init() {
 	// Allocate and initialize test output data vector
 	TestOutputVectorC128 = make([]complex128, len(TestOutputVector)>>1)
