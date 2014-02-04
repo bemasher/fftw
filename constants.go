@@ -73,8 +73,9 @@ func (d Direction) String() string {
 type Locality int
 
 const (
-	InPlace Locality = iota
-	OutOfPlace
+	InPlace    Locality = iota // Allocate a single array and perform transform in-place.
+	OutOfPlace                 // Allocates two separate arrays.
+	PreAlloc                   // Arrays are provided to the planner pre-allocated.
 )
 
 func (l Locality) String() string {
@@ -83,6 +84,8 @@ func (l Locality) String() string {
 		return "InPlace"
 	case OutOfPlace:
 		return "OutOfPlace"
+	case PreAlloc:
+		return "PreAlloc"
 	default:
 		return "Unknown"
 	}
