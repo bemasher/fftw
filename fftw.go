@@ -67,7 +67,7 @@ func NewDFT1D(n uint, dir Direction, locality Locality, planFlags PlanFlag) (pla
 }
 
 func (dft DFT1DPlan) String() string {
-	return fmt.Sprintf("{Kind:C2C Locality:%s PlanFlags:%s In:[%d]complex128 Out:[%d]complex128}", dft.Locality, dft.PlanFlags, len(dft.In), len(dft.Out))
+	return fmt.Sprintf("{Locality:%s PlanFlags:%s In:[%d]complex128 Out:[%d]complex128}", dft.Locality, dft.PlanFlags, len(dft.In), len(dft.Out))
 }
 
 // 1D Half-Complex DFT for transforming real data to complex data and vice versa.
