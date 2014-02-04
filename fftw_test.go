@@ -79,7 +79,7 @@ func ExampleDFT1DPlan() {
 	fmt.Printf("%+0.3f\n", dft.In)
 	fmt.Printf("%+0.3f\n", dft.Out)
 	// Output:
-	// {Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[8]complex128}
+	// {Direction:Forward Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[8]complex128}
 	// [(+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+1.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i) (+0.000+0.000i)]
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
 }
