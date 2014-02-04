@@ -64,7 +64,7 @@ func TestDFT1D(t *testing.T) {
 	}
 }
 
-func Example_dFT1D() {
+func ExampleDFT1DPlan() {
 	dft := NewDFT1D(8, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
@@ -84,86 +84,60 @@ func Example_dFT1D() {
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i) (+1.000+0.414i) (+0.000+0.000i) (+1.000+2.414i)]
 }
 
-func TestR2CDFT(t *testing.T) {
+func TestHCDFT1D(t *testing.T) {
 	for _, locality := range Localities {
-		// Plan transform for current locality
-		r2c := NewDFTR2C(8, locality, Measure)
+		// Plan forward and backward transforms for current locality
+		dftForward := NewHCDFT1D(8, Forward, locality, Measure)
+		dftBackward := NewHCDFT1D(8, Backward, locality, Measure)
 
 		// Copy test vector to input and execute
-		copy(r2c.In, TestInputVectorF64)
-		r2c.Execute()
+		copy(dftForward.Real, TestInputVectorF64)
+		dftForward.Execute()
 
 		// Check output against test output vector
-		for i := range r2c.Out {
-			diff := r2c.Out[i] - TestOutputVectorC128[i]
+		for i := range dftForward.Complex {
+			diff := dftForward.Complex[i] - TestOutputVectorC128[i]
 			if math.Abs(real(diff)) > Tolerance || math.Abs(imag(diff)) > Tolerance {
-				t.Fatalf("%10s: %+0.3f %+0.3f", locality, r2c.Out[i], TestOutputVectorC128[i])
+				t.Fatalf("failed: %+0.3f %+0.3f", dftForward.Complex[i], TestOutputVectorC128[i])
 			}
 		}
-	}
-}
 
-func Example_dFTR2C() {
-	r2c := NewDFTR2C(8, OutOfPlace, Measure)
-	defer r2c.Close()
-
-	// Modifying the location of the input or output arrays will cause FFTW to
-	// fail. Instead, copy data into and out of arrays.
-	data := []float64{1, 1, 1, 1, 0, 0, 0, 0}
-	copy(r2c.In, data)
-
-	r2c.Execute()
-
-	fmt.Println(r2c)
-	fmt.Printf("%+0.3f\n", r2c.In)
-	fmt.Printf("%+0.3f\n", r2c.Out)
-	// Output:
-	// {Kind:R2C Locality:OutOfPlace PlanFlags:NA In:[8]complex128 Out:[5]float64}
-	// [+1.000 +1.000 +1.000 +1.000 +0.000 +0.000 +0.000 +0.000]
-	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
-}
-
-func TestC2RDFT(t *testing.T) {
-	for _, locality := range Localities {
-		// Plan transform for current locality
-		c2r := NewDFTC2R(8, locality, Measure)
-
-		// Copy test vector to input and execute
-		copy(c2r.In, TestOutputVectorC128)
-		c2r.Execute()
+		// Copy back to input for backward transform and execute
+		copy(dftBackward.Complex, dftForward.Complex)
+		dftBackward.Execute()
 
 		// Normalize the output data, FFTW doesn't by default
-		for i := range c2r.Out {
-			c2r.Out[i] /= 8
+		for i := range dftBackward.Real {
+			dftBackward.Real[i] /= 8
 		}
 
-		// Check output against test output vector
-		for i := range c2r.Out {
-			diff := math.Abs(c2r.Out[i] - TestInputVectorF64[i])
-			if diff > Tolerance {
-				t.Fatalf("R2C %10s: %+0.3f %+0.3f", locality, c2r.Out[i], TestInputVectorF64[i])
+		// Check output against test input vector
+		for i := range dftBackward.Real {
+			diff := dftBackward.Real[i] - TestInputVectorF64[i]
+			if math.Abs(diff) > Tolerance {
+				t.Fatalf("failed: %+0.3f %+0.3f", dftBackward.Real[i], TestInputVectorF64[i])
 			}
 		}
 	}
 }
 
-func Example_dFTC2R() {
-	c2r := NewDFTC2R(8, OutOfPlace, Measure)
-	defer c2r.Close()
+func ExampleHCDFT1DPlan() {
+	dft := NewHCDFT1D(8, Forward, OutOfPlace, Measure)
+	defer dft.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
 	// fail. Instead, copy data into and out of arrays.
-	data := []complex128{(4 + 0i), (1 - 2.414213562373095i), (0 + 0i), (1 - 0.41421356237309515i), (0 + 0i)}
-	copy(c2r.In, data)
+	copy(dft.Real, []float64{1, 1, 1, 1, 0, 0, 0, 0})
 
-	c2r.Execute()
-	fmt.Println(c2r)
-	fmt.Printf("%+0.3f\n", c2r.In)
-	fmt.Printf("%+0.3f\n", c2r.Out)
+	dft.Execute()
+
+	fmt.Println(dft)
+	fmt.Printf("%+0.3f\n", dft.Real)
+	fmt.Printf("%+0.3f\n", dft.Complex)
 	// Output:
-	// {Kind:C2R Locality:OutOfPlace PlanFlags:NA In:[5]complex128 Out:[8]float64}
+	// {Direction:Forward Locality:OutOfPlace PlanFlags:NA Real:[8]float64 Complex:[5]complex128}
+	// [+1.000 +1.000 +1.000 +1.000 +0.000 +0.000 +0.000 +0.000]
 	// [(+4.000+0.000i) (+1.000-2.414i) (+0.000+0.000i) (+1.000-0.414i) (+0.000+0.000i)]
-	// [+8.000 +8.000 +8.000 +8.000 +0.000 +0.000 +0.000 +0.000]
 }
 
 const (
@@ -171,7 +145,7 @@ const (
 	BlockSize = 1 << Bits
 )
 
-func BenchmarkDFTInPlace(b *testing.B) {
+func BenchmarkDFTInPlaceForward(b *testing.B) {
 	dft := NewDFT1D(BlockSize, Forward, InPlace, Measure)
 	defer dft.Close()
 
@@ -183,7 +157,7 @@ func BenchmarkDFTInPlace(b *testing.B) {
 	}
 }
 
-func BenchmarkDFTOutOfPlace(b *testing.B) {
+func BenchmarkDFTOutOfPlaceForward(b *testing.B) {
 	dft := NewDFT1D(BlockSize, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
@@ -195,8 +169,8 @@ func BenchmarkDFTOutOfPlace(b *testing.B) {
 	}
 }
 
-func BenchmarkR2CInPlace(b *testing.B) {
-	dft := NewDFTR2C(BlockSize, InPlace, Measure)
+func BenchmarkDFTInPlaceBackward(b *testing.B) {
+	dft := NewDFT1D(BlockSize, Backward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -207,8 +181,8 @@ func BenchmarkR2CInPlace(b *testing.B) {
 	}
 }
 
-func BenchmarkR2COutOfPlace(b *testing.B) {
-	dft := NewDFTR2C(BlockSize, OutOfPlace, Measure)
+func BenchmarkDFTOutOfPlaceBackward(b *testing.B) {
+	dft := NewDFT1D(BlockSize, Backward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -219,8 +193,8 @@ func BenchmarkR2COutOfPlace(b *testing.B) {
 	}
 }
 
-func BenchmarkC2RInPlace(b *testing.B) {
-	dft := NewDFTC2R(BlockSize, InPlace, Measure)
+func BenchmarkHCDFTInPlaceForward(b *testing.B) {
+	dft := NewHCDFT1D(BlockSize, Forward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -231,8 +205,32 @@ func BenchmarkC2RInPlace(b *testing.B) {
 	}
 }
 
-func BenchmarkC2ROutOfPlace(b *testing.B) {
-	dft := NewDFTC2R(BlockSize, OutOfPlace, Measure)
+func BenchmarkHCDFTOutOfPlaceForward(b *testing.B) {
+	dft := NewHCDFT1D(BlockSize, Forward, OutOfPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkHCDFTInPlaceBackward(b *testing.B) {
+	dft := NewHCDFT1D(BlockSize, Backward, InPlace, Measure)
+	defer dft.Close()
+
+	b.SetBytes(BlockSize)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		dft.Execute()
+	}
+}
+
+func BenchmarkHCDFTOutOfPlaceBackward(b *testing.B) {
+	dft := NewHCDFT1D(BlockSize, Backward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
