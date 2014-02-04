@@ -12,6 +12,7 @@ import (
 
 func main() {
 	dft := fftw.NewDFT1D(8, fftw.Forward, fftw.OutOfPlace, fftw.Measure)
+	defer dft.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
 	// fail. Instead, copy data into and out of arrays.

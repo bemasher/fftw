@@ -66,6 +66,7 @@ func TestDFT1D(t *testing.T) {
 
 func Example_dFT1D() {
 	dft := NewDFT1D(8, Forward, OutOfPlace, Measure)
+	defer dft.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
 	// fail. Instead, copy data into and out of arrays.
@@ -104,6 +105,7 @@ func TestR2CDFT(t *testing.T) {
 
 func Example_dFTR2C() {
 	r2c := NewDFTR2C(8, OutOfPlace, Measure)
+	defer r2c.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
 	// fail. Instead, copy data into and out of arrays.
@@ -147,6 +149,7 @@ func TestC2RDFT(t *testing.T) {
 
 func Example_dFTC2R() {
 	c2r := NewDFTC2R(8, OutOfPlace, Measure)
+	defer c2r.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
 	// fail. Instead, copy data into and out of arrays.
