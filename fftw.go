@@ -147,7 +147,7 @@ func NewDFTC2R(n uint, locality Locality, planFlags PlanFlag) (plan DFTC2RPlan) 
 	case locality == InPlace:
 		header := *(*reflect.SliceHeader)(unsafe.Pointer(&plan.Out))
 		header.Len = int(n)
-		header.Cap = header.Len
+		header.Cap = header.Len + 2
 		header.Data = uintptr(unsafe.Pointer(&plan.In[0]))
 		plan.Out = *(*[]float64)(unsafe.Pointer(&header))
 	case locality == OutOfPlace:
