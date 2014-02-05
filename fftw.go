@@ -81,9 +81,9 @@ type HCDFT1DPlan struct {
 }
 
 // Plans 1D Half-Complex DFT of size n. For in-place transforms input and
-// output arrays are backed by the same array using reflection. This is
-// inherently unsafe because it requires casting an array of one type to another
-// which is not allowed in the type system.
+// output arrays are backed by the same array using reflection. This is unsafe
+// because it requires casting an array of one type to another which is not
+// allowed in the type system.
 func NewHCDFT1D(n uint, r []float64, c []complex128, dir Direction, locality Locality, planFlags PlanFlag) (plan HCDFT1DPlan) {
 	plan.Direction = dir
 	plan.Locality = locality
@@ -138,7 +138,7 @@ func NewHCDFT1D(n uint, r []float64, c []complex128, dir Direction, locality Loc
 			C.uint(planFlags),
 		)
 	default:
-		panic("invalid direction:" + dir.String())
+		panic("invalid direction: " + dir.String())
 	}
 
 	return
