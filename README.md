@@ -33,9 +33,9 @@ Output:
 ```
 
 ## Windows
-On Windows the library file `libfftw3-3.a` must be placed in the source directory of the package and can be generated using:
+On Windows the library file `libfftw3.a` must be placed in the source directory of the package and can be generated using:
 	
-	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3-3.a
+	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3.a
 
 ## Copyright
 The FFTW header file `fftw3.h` carries with the following copyright notice:

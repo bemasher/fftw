@@ -1,7 +1,7 @@
 package fftw
 
 // #cgo CFLAGS: -I.
-// #cgo LDFLAGS: -L. -lfftw3-3
+// #cgo LDFLAGS: -L. -lfftw3
 // #include <complex.h>
 // #include "fftw3.h"
 import "C"
