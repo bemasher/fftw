@@ -38,7 +38,7 @@ On Windows the library file `libfftw3.a` must be placed in the source directory 
 	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3.a
 
 ## Copyright
-The FFTW header file `fftw3.h` carries with the following copyright notice:
+The FFTW header file `fftw3.h` carries the following copyright notice:
 
 	Copyright (c) 2003, 2007-11 Matteo Frigo
 	Copyright (c) 2003, 2007-11 Massachusetts Institute of Technology
