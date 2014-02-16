@@ -99,14 +99,14 @@ func NewHCDFT1D(n uint, r []float64, c []complex128, dir Direction, locality Loc
 		plan.Real = make([]float64, n)
 		plan.Complex = make([]complex128, cmplxLen)
 	case InPlace:
-		plan.Real = make([]float64, n, n+2)
+		plan.Complex = make([]complex128, cmplxLen)
 
-		header := *(*reflect.SliceHeader)(unsafe.Pointer(&plan.Complex))
-		header.Len = cmplxLen
-		header.Cap = cmplxLen
-		header.Data = uintptr(unsafe.Pointer(&plan.Real[0]))
+		header := *(*reflect.SliceHeader)(unsafe.Pointer(&plan.Real))
+		header.Len = int(n)
+		header.Cap = int(n)
+		header.Data = uintptr(unsafe.Pointer(&plan.Complex[0]))
 
-		plan.Complex = *(*[]complex128)(unsafe.Pointer(&header))
+		plan.Real = *(*[]float64)(unsafe.Pointer(&header))
 	case PreAlloc:
 		if len(r) != int(n) {
 			panic(fmt.Sprintf("invalid real array length: n:%d r:%d", n, len(r)))
