@@ -33,6 +33,9 @@ func TestDFT1D(t *testing.T) {
 		dftForward := NewDFT1D(8, Forward, locality, Measure)
 		dftBackward := NewDFT1D(8, Backward, locality, Measure)
 
+		defer dftForward.Close()
+		defer dftBackward.Close()
+
 		// Copy test vector to input and execute
 		copy(dftForward.In, TestInputVectorC128)
 		dftForward.Execute()
@@ -89,6 +92,9 @@ func TestHCDFT1D(t *testing.T) {
 		// Plan forward and backward transforms for current locality
 		dftForward := NewHCDFT1D(8, nil, nil, Forward, locality, Measure)
 		dftBackward := NewHCDFT1D(8, nil, nil, Backward, locality, Measure)
+
+		defer dftForward.Close()
+		defer dftBackward.Close()
 
 		// Copy test vector to input and execute
 		copy(dftForward.Real, TestInputVectorF64)
