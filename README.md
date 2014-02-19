@@ -37,6 +37,10 @@ On Windows the library file `libfftw3.a` must be placed in the source directory 
 	
 	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3.a
 
+## Documentation
+
+[![GoDoc](https://godoc.org/github.com/bemasher/fftw?status.png)](https://godoc.org/github.com/bemasher/fftw)
+
 ## Copyright
 The FFTW header file `fftw3.h` carries the following copyright notice:
 
