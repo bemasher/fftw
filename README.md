@@ -1,6 +1,8 @@
 ## FFTW
 This package is a wrapper for 1D full and half complex DFT's provided by the FFTW library. Beware, this package is still under some heavy development and interface is subject to change.
 
+[![GoDoc](https://godoc.org/github.com/bemasher/fftw?status.png)](https://godoc.org/github.com/bemasher/fftw)
+
 ## Example
 ```Go
 package main
@@ -37,9 +39,10 @@ On Windows the library file `libfftw3.a` must be placed in the source directory 
 	
 	dlltool -d libfftw3-3.def -D libfftw3-3.dll -l libfftw3.a
 
-## Documentation
+## Linux
+In Debian flavored distributions installing the `libfftw3-dev` package is all that is required:
 
-[![GoDoc](https://godoc.org/github.com/bemasher/fftw?status.png)](https://godoc.org/github.com/bemasher/fftw)
+	sudo apt-get install libfftw3-dev
 
 ## Copyright
 The FFTW header file `fftw3.h` carries the following copyright notice:
