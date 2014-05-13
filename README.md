@@ -1,6 +1,7 @@
 ## FFTW
 This package is a wrapper for 1D full and half complex DFT's provided by the FFTW library. Beware, this package is still under some heavy development and interface is subject to change.
 
+[![Build Status](https://travis-ci.org/bemasher/fftw.svg?branch=master)](https://travis-ci.org/bemasher/fftw)
 [![GoDoc](https://godoc.org/github.com/bemasher/fftw?status.png)](https://godoc.org/github.com/bemasher/fftw)
 
 ## Example
