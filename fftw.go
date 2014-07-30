@@ -38,21 +38,43 @@ type DFT1DPlan struct {
 }
 
 // Plans 1D DFT of size n.
-func NewDFT1D(n uint, dir Direction, locality Locality, planFlags PlanFlag) (plan DFT1DPlan) {
+func NewDFT1D(n uint, in, out []complex128, dir Direction, locality Locality, planFlags PlanFlag) (plan DFT1DPlan) {
 	// Store configuration for string formatting later
 	plan.Direction = dir
 	plan.Locality = locality
 	plan.PlanFlags = planFlags
 
-	// Allocate the input and output arrays according to given locality.
-	plan.In = make([]complex128, n)
+	// // Allocate the input and output arrays according to given locality.
+	// plan.In = make([]complex128, n)
+	// switch locality {
+	// case OutOfPlace:
+	// 	plan.Out = make([]complex128, n)
+	// case InPlace:
+	// 	plan.Out = plan.In
+	// default:
+	// 	panic(fmt.Sprintf("invalid locality: %d", locality))
+	// }
+
 	switch locality {
 	case OutOfPlace:
+		plan.In = make([]complex128, n)
 		plan.Out = make([]complex128, n)
 	case InPlace:
+		plan.In = make([]complex128, n)
 		plan.Out = plan.In
+	case PreAlloc:
+		if len(in) != int(n) {
+			panic(fmt.Sprintf("invalid input array length: n:%d r:%d", n, len(in)))
+		}
+
+		if len(out) != int(n) {
+			panic(fmt.Sprintf("invalid output array length: n:%d r:%d", n, len(out)))
+		}
+
+		plan.In = in
+		plan.Out = out
 	default:
-		panic(fmt.Sprintf("invalid locality: %d", locality))
+		panic(fmt.Sprintf("invalid locality: %d\n", locality))
 	}
 
 	// Create the plan using the given arrays and flags.

@@ -30,8 +30,8 @@ var Localities []Locality = []Locality{InPlace, OutOfPlace}
 func TestDFT1D(t *testing.T) {
 	for _, locality := range Localities {
 		// Plan forward and backward transforms for current locality
-		dftForward := NewDFT1D(8, Forward, locality, Measure)
-		dftBackward := NewDFT1D(8, Backward, locality, Measure)
+		dftForward := NewDFT1D(8, nil, nil, Forward, locality, Measure)
+		dftBackward := NewDFT1D(8, nil, nil, Backward, locality, Measure)
 
 		defer dftForward.Close()
 		defer dftBackward.Close()
@@ -68,7 +68,7 @@ func TestDFT1D(t *testing.T) {
 }
 
 func ExampleDFT1DPlan() {
-	dft := NewDFT1D(8, Forward, OutOfPlace, Measure)
+	dft := NewDFT1D(8, nil, nil, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	// Modifying the location of the input or output arrays will cause FFTW to
@@ -147,12 +147,12 @@ func ExampleHCDFT1DPlan() {
 }
 
 const (
-	Bits      = 14
+	Bits      = 12
 	BlockSize = 1 << Bits
 )
 
 func BenchmarkDFTInPlaceForward(b *testing.B) {
-	dft := NewDFT1D(BlockSize, Forward, InPlace, Measure)
+	dft := NewDFT1D(BlockSize, nil, nil, Forward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -164,7 +164,7 @@ func BenchmarkDFTInPlaceForward(b *testing.B) {
 }
 
 func BenchmarkDFTOutOfPlaceForward(b *testing.B) {
-	dft := NewDFT1D(BlockSize, Forward, OutOfPlace, Measure)
+	dft := NewDFT1D(BlockSize, nil, nil, Forward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -176,7 +176,7 @@ func BenchmarkDFTOutOfPlaceForward(b *testing.B) {
 }
 
 func BenchmarkDFTInPlaceBackward(b *testing.B) {
-	dft := NewDFT1D(BlockSize, Backward, InPlace, Measure)
+	dft := NewDFT1D(BlockSize, nil, nil, Backward, InPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
@@ -188,7 +188,7 @@ func BenchmarkDFTInPlaceBackward(b *testing.B) {
 }
 
 func BenchmarkDFTOutOfPlaceBackward(b *testing.B) {
-	dft := NewDFT1D(BlockSize, Backward, OutOfPlace, Measure)
+	dft := NewDFT1D(BlockSize, nil, nil, Backward, OutOfPlace, Measure)
 	defer dft.Close()
 
 	b.SetBytes(BlockSize)
